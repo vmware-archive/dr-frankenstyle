@@ -1,0 +1,9 @@
+
+.style1 {
+  color: red;
+  background: url('image1.png'), url('folder/image2.png');
+}
+.style2 {
+  color: blue;
+  background-image: url('folder/image2.png');
+}

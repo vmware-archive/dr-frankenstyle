@@ -1,0 +1,36 @@
+{
+  "name": "dr-frankenstyle",
+  "version": "0.0.4",
+  "description": "Builds css from your dependencies",
+  "main": "dist/dr-frankenstyle.js",
+  "files": ["dist", "package.json", "LICENSE", "README.md"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pivotal-cf/dr-frankenstyle.git"
+  },
+  "keywords": [
+    "pivotal ui",
+    "css"
+  ],
+  "author": "Pivotal Software, Inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pivotal-cf/dr-frankenstyle/issues"
+  },
+  "devDependencies": {
+    "jasmine": "^2.2.0",
+    "rimraf": "^2.3.2"
+  },
+  "dependencies": {
+    "babel": "5.1.9",
+    "babel-runtime": "5.1.9",
+    "es6-promisify": "^1.1.1",
+    "lodash.uniq": "^3.1.0",
+    "npm": "^2.8.3",
+    "postcss": "^4.1.5"
+  },
+  "scripts": {
+    "test": "babel-node --stage 1 -e 'new (require(\"jasmine\"))().execute([\"./**/*_spec.js\"])'",
+    "prepublish": "babel --stage 1 --optional runtime lib --out-dir dist"
+  }
+}
