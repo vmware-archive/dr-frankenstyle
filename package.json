@@ -1,9 +1,14 @@
 {
   "name": "dr-frankenstyle",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Builds css from your dependencies",
   "main": "dist/dr-frankenstyle.js",
-  "files": ["dist", "package.json", "LICENSE", "README.md"],
+  "files": [
+    "dist",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/pivotal-cf/dr-frankenstyle.git"
