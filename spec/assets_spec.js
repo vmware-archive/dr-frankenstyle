@@ -42,7 +42,7 @@ describe('assets', function() {
     expect(files[2].path).toBe('folder/image2.png');
     expect(files[2].contents.equals(fixture('folder/image2.gif'))).toBe(true);
 
-    expect(files[3].path).toBe('output.css');
+    expect(files[3].path).toBe('components.css');
     expect(files[3].contents.toString()).toBe(fixture('expected_output.css').toString());
 
     done();

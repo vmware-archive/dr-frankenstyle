@@ -73,7 +73,7 @@ describe('dr-frankenstyle', function() {
     writePackage(dependencyTree, __dirname);
     writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
       require('../..')(function(file, callback) {
-        if (file.path === 'output.css') console.log(file.contents.toString());
+        if (file.path === 'components.css') console.log(file.contents.toString());
         callback(null, file);
       });
     });
