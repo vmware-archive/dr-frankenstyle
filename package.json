@@ -1,6 +1,6 @@
 {
   "name": "dr-frankenstyle",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Builds css from your dependencies",
   "main": "dist/dr-frankenstyle.js",
   "files": [
