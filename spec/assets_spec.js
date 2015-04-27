@@ -34,12 +34,15 @@ describe('assets', function() {
     await promise;
 
     expect(files[0].path).toBe('image1.png');
+    expect(files[0].importedBy).toBe(fixturePath('style1.css'));
     expect(files[0].contents.equals(fixture('image1.gif'))).toBe(true);
 
     expect(files[1].path).toBe('folder/image2.png');
+    expect(files[1].importedBy).toBe(fixturePath('style1.css'));
     expect(files[1].contents.equals(fixture('folder/image2.gif'))).toBe(true);
 
     expect(files[2].path).toBe('folder/image2.png');
+    expect(files[2].importedBy).toBe(fixturePath('style2.css'));
     expect(files[2].contents.equals(fixture('folder/image2.gif'))).toBe(true);
 
     expect(files[3].path).toBe('components.css');
