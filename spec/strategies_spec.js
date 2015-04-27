@@ -1,10 +1,9 @@
-import fs from 'fs';
 import path from 'path';
+import {directory} from '../lib/strategies';
+import {readFile} from '../lib/async';
 import promisify from 'es6-promisify';
 import rimraf from 'rimraf';
-import {directory} from '../lib/strategies';
 
-let readFile = promisify(fs.readFile);
 let rmr = promisify(rimraf);
 
 describe('strategies', function(){
