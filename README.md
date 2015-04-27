@@ -1,5 +1,7 @@
 # Dr Frankenstyle
 
+[![Build Status](https://travis-ci.org/pivotal-cf/dr-frankenstyle.svg)](https://travis-ci.org/pivotal-cf/dr-frankenstyle)
+
 Dr Frankenstyle is a tool that resolves CSS dependencies between node packages. 
 
 For example, if your app needs both buttons and tooltips, install the button and tooltip node modules:
