@@ -13,7 +13,7 @@ class TestPromise extends Promise {
   }
 }
 
-describe('assets', function() {
+fdescribe('assets', function() {
   it('works', async function(done) {
     let files = [];
     let promise = new TestPromise();

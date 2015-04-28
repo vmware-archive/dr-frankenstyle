@@ -1,4 +1,4 @@
 .style1 {
   color: red;
-  background: url('image1.gif'), url('folder/image2.gif');
+  background: url('image1.gif?#iefix'), url('folder/image2.gif');
 }
