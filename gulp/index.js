@@ -1,7 +1,7 @@
 var drFrankenstyle = require('dr-frankenstyle');
 var through2 = require('through2');
 var File = require('vinyl');
-var namespaceAssets = require('dr-frankenstyle/lib/strategies').namespaceAssets;
+var namespaceAssets = require('dr-frankenstyle/dist/strategies').namespaceAssets;
 
 module.exports = function() {
   var assetsStream = through2.obj();
