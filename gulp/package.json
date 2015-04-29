@@ -1,6 +1,6 @@
 {
   "name": "gulp-dr-frankenstyle",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Resolves CSS dependencies between node packages",
   "files": [
     "index.js",
