@@ -78,7 +78,7 @@ describe('dr-frankenstyle', function() {
     rimraf.sync(path.resolve(__dirname, 'myApp'));
   });
 
-  describe('without streaming', function() {
+  describe('via callback strategy', function() {
     let css;
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
@@ -116,26 +116,7 @@ describe('dr-frankenstyle', function() {
     });
   });
 
-  describe('streaming', function() {
-    let files;
-    beforeEach(function() {
-      writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
-        require('../../index.js')({stream: true})
-          .pipe(require('through2').obj(function(file, encoding, callback){
-            console.log(file.path);
-            callback(null, file);
-        }));
-      });
-      files = childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')})
-        .stdout.toString();
-    });
-
-    it('streams all the files', function() {
-      expect(files.trim()).toBe('components.css');
-    });
-  });
-
-  describe('directory', function() {
+  describe('via directory strategy', function() {
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
         require('../../index.js')({directory: 'tmp'})
