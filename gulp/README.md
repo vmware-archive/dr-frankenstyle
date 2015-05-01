@@ -20,6 +20,7 @@ var drFrankenstyle = require('gulp-dr-frankenstyle');
 
 gulp.task('assets', function() {
   return drFrankenstyle()
+    .pipe(drFrankenstyle.done())
     .pipe(gulp.dest('public'));
 });
 
@@ -47,6 +48,7 @@ var through2 = require('through2');
 
 gulp.task('assets', function() {
   return drFrankenstyle()
+    .pipe(drFrankenstyle.done())
     .pipe(gulp.dest('assets'));
 });
 ```
@@ -67,6 +69,7 @@ var rename = require("gulp-rename");
 gulp.task('assets', function() {
   return drFrankenstyle()
     .pipe(rename({prefix: 'prefix-'}))
+    .pipe(drFrankenstyle.done())
     .pipe(gulp.dest('public'));
 });
 ```
