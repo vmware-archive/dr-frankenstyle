@@ -1,6 +1,6 @@
 {
   "name": "dr-frankenstyle",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "Resolves CSS dependencies between node packages",
   "main": "dist/dr-frankenstyle.js",
   "files": [
@@ -29,6 +29,7 @@
   "dependencies": {
     "babel": "5.1.13",
     "babel-runtime": "5.1.13",
+    "debuglog": "^1.0.1",
     "es6-promisify": "^1.1.1",
     "lodash.uniq": "^3.1.0",
     "mkdirp": "^0.5.0",

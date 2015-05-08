@@ -1,6 +1,6 @@
 {
   "name": "gulp-dr-frankenstyle",
-  "version": "0.0.9",
+  "version": "0.0.11",
   "description": "Resolves CSS dependencies between node packages",
   "files": [
     "index.js",
@@ -22,7 +22,7 @@
     "url": "https://github.com/pivotal-cf/dr-frankenstyle/issues"
   },
   "dependencies": {
-    "dr-frankenstyle": "^0.0.9",
+    "dr-frankenstyle": "^0.0.10",
     "through2": "^0.6.5",
     "vinyl": "^0.4.6"
   },
