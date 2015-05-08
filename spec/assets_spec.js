@@ -5,18 +5,15 @@ import assets from '../lib/assets';
 let fixturePath = fixtureFile => path.resolve(__dirname, 'fixtures', fixtureFile);
 let fixture = fixtureFile => fs.readFileSync(fixturePath(fixtureFile));
 
-class TestPromise extends Promise {
-  constructor() {
-    let resolve, reject;
-    super((...args) => [resolve, reject] = args);
-    Object.assign(this, {resolve, reject});
-  }
-}
-
 describe('assets', function() {
   it('works', async function(done) {
+    let resolve, reject;
+    let promise = new Promise(function(_resolve, _reject) {
+      resolve = _resolve;
+      reject = _reject;
+    });
+
     let files = [];
-    let promise = new TestPromise();
     let count = 0;
     assets(
       [
@@ -27,7 +24,7 @@ describe('assets', function() {
         files.push(file);
         file.path = file.path.replace('gif', 'png');
         callback(null, file);
-        if (++count === 4) promise.resolve('hello');
+        if (++count === 4) resolve('hello');
       }
     );
 
