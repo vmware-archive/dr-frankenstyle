@@ -8,7 +8,7 @@ dependencies between node packages, carefully respecting the order of our compon
 cascades correctly.
 
 **We suggest using [gulp-dr-frankenstyle](https://www.npmjs.com/package/gulp-dr-frankenstyle) rather than this 
-module.** It is easier to use and allows you to stream into other handy plugins. If you'd still like to install
+module directly.** It is easier to use and allows you to stream into other handy plugins. If you'd still like to install
 dr-frankenstyle directly, this is how you do it:
 
 ## Installing
