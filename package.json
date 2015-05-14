@@ -42,6 +42,6 @@
   },
   "scripts": {
     "test": "npm install && jasmine-es6",
-    "prepublish": "babel src --out-dir dist"
+    "prepublish": "./node_modules/.bin/babel src --out-dir dist"
   }
 }
