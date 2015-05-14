@@ -24,7 +24,9 @@
   },
   "devDependencies": {
     "jasmine": "^2.2.0",
-    "rimraf": "^2.3.2"
+    "proxyquire": "^1.4.0",
+    "rimraf": "^2.3.2",
+    "vinyl": "^0.4.6"
   },
   "dependencies": {
     "babel": "5.1.13",
