@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs';
-import assets from '../lib/assets';
+import assets from '../src/assets';
 
 let fixturePath = fixtureFile => path.resolve(__dirname, 'fixtures', fixtureFile);
 let fixture = fixtureFile => fs.readFileSync(fixturePath(fixtureFile));

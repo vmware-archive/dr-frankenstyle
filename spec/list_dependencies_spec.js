@@ -1,4 +1,4 @@
-import listDependencies from '../lib/list_dependencies';
+import listDependencies from '../src/list_dependencies';
 
 let packageJson = {};
 function d(name, dependencies) {

@@ -23,8 +23,9 @@
     "url": "https://github.com/pivotal-cf/dr-frankenstyle/issues"
   },
   "devDependencies": {
+    "dr-frankenstyle": "./",
     "jasmine": "^2.2.0",
-    "proxyquire": "^1.4.0",
+    "jasmine-es6": "0.0.2",
     "rimraf": "^2.3.2",
     "vinyl": "^0.4.6"
   },
@@ -40,7 +41,7 @@
     "through2": "^0.6.5"
   },
   "scripts": {
-    "test": "babel-node --stage 1 -e 'new (require(\"jasmine\"))().execute([\"./**/*_spec.js\"])'",
-    "prepublish": "babel --stage 1 --optional runtime lib --out-dir dist"
+    "test": "npm install && jasmine-es6",
+    "prepublish": "babel src --out-dir dist"
   }
 }

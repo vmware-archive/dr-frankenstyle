@@ -1,12 +1,9 @@
 import through2 from 'through2';
-import proxyquire from 'proxyquire';
 
-// In order to test the local Gulp plugin against the local DrFrankenstyle, we have to override
-// `require('dr-frankenstyle')` in the Gulp plugin to point to the local DrFrankenstyle instead of
-// the npm version
-const drFrankenstyle = proxyquire('../gulp', {
-  'dr-frankenstyle': require('../')
-});
+// In order to test the local Gulp plugin against the local DrFrankenstyle, we have to
+// add dr-frankenstyle as a devDependency of dr-frankenstyle and run `npm install` before running
+// jasmine. See the `package.json` for more details.
+import drFrankenstyle from '../gulp';
 
 describe('gulp-dr-frankenstyle', function() {
   describe('.railsUrls', function() {

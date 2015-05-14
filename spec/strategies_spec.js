@@ -1,6 +1,6 @@
 import path from 'path';
-import {directory} from '../lib/strategies';
-import {readFile} from '../lib/async';
+import {directory} from '../src/strategies';
+import {readFile} from '../src/async';
 import promisify from 'es6-promisify';
 import rimraf from 'rimraf';
 

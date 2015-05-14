@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 import rimraf from 'rimraf';
-import drFrankenstyle from '../index';
+import drFrankenstyle from '../src/dr-frankenstyle';
 import through2 from 'through2';
-import {readFile} from '../lib/async';
+import {readFile} from '../src/async';
 
 let packageJson = {};
 
@@ -82,13 +82,15 @@ describe('dr-frankenstyle', function() {
     let css;
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
-        require('../../index.js')(function(file, callback) {
+        require('../..')(function(file, callback) {
           if (file.path === 'components.css') console.log(file.contents.toString());
           callback(null, file);
         });
       });
-      css = childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')})
-        .stdout.toString();
+
+      const child = childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')});
+      css = child.stdout.toString();
+      expect(child.stderr.toString().trim()).toBe('');
     });
 
     it('has no duplicates', function() {
@@ -120,14 +122,17 @@ describe('dr-frankenstyle', function() {
     let files;
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
-        require('../../index.js')({stream: true})
+        require('../..')({stream: true})
           .pipe(require('through2').obj(function(file, encoding, callback){
             console.log(file.path);
             callback(null, file);
         }));
       });
-      files = childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')})
-        .stdout.toString();
+
+      const child = childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')});
+
+      files = child.stdout.toString();
+      expect(child.stderr.toString().trim()).toBe('');
     });
 
     it('streams all the files', function() {
@@ -138,9 +143,10 @@ describe('dr-frankenstyle', function() {
   describe('directory', function() {
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
-        require('../../index.js')({directory: 'tmp'})
+        require('../..')({directory: 'tmp'})
       });
-      childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')});
+      const child = childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')});
+      expect(child.stderr.toString().trim()).toBe('');
     });
 
     it('writes the files', async function(done) {
