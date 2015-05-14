@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "babel": "^5.3.3",
-    "babel-eslint": "^3.1.1",
+    "babel-eslint": "3.1.1",
     "del": "^1.1.1",
     "dr-frankenstyle": "file:dist",
     "gulp": "^3.8.11",
