@@ -31,7 +31,6 @@
     "vinyl": "^0.4.6"
   },
   "dependencies": {
-    "babel": "5.1.13",
     "babel-runtime": "5.1.13",
     "debuglog": "^1.0.1",
     "es6-promisify": "^1.1.1",
