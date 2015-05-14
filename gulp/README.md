@@ -35,6 +35,25 @@ If you serve `components.css` and the required fonts and images, you can consume
 
 If you add or remove node modules that require css, rerun Dr. Frankenstyle again to update the css.
 
+## For Rails users
+
+Pipe the Dr. Frankenstyle output through the `railsUrls` helper
+to have css that uses Rails' `asset-url` helpers.
+(I.e. you want CSS that looks like `background: asset-url('foo/bar.png')`,
+ not `background: url('foo/bar.png')`).
+
+```js
+var gulp = require('gulp');
+var drFrankenstyle = require('gulp-dr-frankenstyle');
+
+gulp.task('assets', function() {
+  return drFrankenstyle()
+    .pipe(drFrankenstyle.railsUrls())
+    .pipe(drFrankenstyle.done())
+    .pipe(gulp.dest('public'));
+});
+```
+
 ## Modifying the file path
 
 To change locations of the compiled css or required assets, you can modifiy the `file.path`.
