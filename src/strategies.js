@@ -18,7 +18,7 @@ export function directory(outputDir) {
     await logError(mkdir(path.dirname(filePath)));
     await logError(writeFile(filePath, file.contents));
     callback(null, file);
-  }
+  };
 }
 
 export function stream(stream) {
@@ -28,5 +28,5 @@ export function stream(stream) {
     await logError(promisify(stream.write.bind(stream))(file));
     if (originalPath === 'components.css') await promisify(stream.end.bind(stream))();
     callback(null, file);
-  }
+  };
 }

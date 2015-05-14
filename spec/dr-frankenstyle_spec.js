@@ -2,8 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
 import rimraf from 'rimraf';
-import drFrankenstyle from '../src/dr-frankenstyle';
-import through2 from 'through2';
 import {readFile} from '../src/async';
 
 let packageJson = {};
@@ -82,7 +80,7 @@ describe('dr-frankenstyle', function() {
     let css;
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
-        require('../..')(function(file, callback) {
+        require('dr-frankenstyle')(function(file, callback) {
           if (file.path === 'components.css') console.log(file.contents.toString());
           callback(null, file);
         });
@@ -122,7 +120,7 @@ describe('dr-frankenstyle', function() {
     let files;
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
-        require('../..')({stream: true})
+        require('dr-frankenstyle')({stream: true})
           .pipe(require('through2').obj(function(file, encoding, callback){
             console.log(file.path);
             callback(null, file);
@@ -143,7 +141,7 @@ describe('dr-frankenstyle', function() {
   describe('directory', function() {
     beforeEach(function() {
       writeCode(path.resolve(__dirname, 'myApp', 'index.js'), () => {
-        require('../..')({directory: 'tmp'})
+        require('dr-frankenstyle')({directory: 'tmp'});
       });
       const child = childProcess.spawnSync('node', ['index.js'], {cwd: path.resolve(__dirname, 'myApp')});
       expect(child.stderr.toString().trim()).toBe('');

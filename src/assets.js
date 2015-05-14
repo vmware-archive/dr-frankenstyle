@@ -36,22 +36,24 @@ function updateCssPaths(css, updatePath) {
   );
 }
 
-export default async (cssFiles, askUserForPath) => {
+export default async function(cssFiles, askUserForPath) {
+  async function updateAsset(cssFile, assetPath) {
+    debug(`Processing asset: ${assetPath}`);
+    let asset = await logError(
+      readFile(path.resolve(path.dirname(cssFile), assetPath)),
+      `Could not read asset ${assetPath} imported by ${cssFile}`
+    );
+    let {path: newPath} = await logError(askUserForPath({path: assetPath, importedBy: cssFile, contents: asset}));
+    return newPath;
+  }
+
   askUserForPath = promisify(askUserForPath);
   let concatenatedCss = '';
   for (let cssFile of cssFiles) {
     debug(`Processing css: ${cssFile}`);
     let css = await logError(readFile(cssFile), `Could not read CSS file: ${cssFile}. Exiting.`);
-    let result = await updateCssPaths(css, async assetPath => {
-      debug(`Processing asset: ${assetPath}`);
-      let asset = await logError(
-        readFile(path.resolve(path.dirname(cssFile), assetPath)),
-        `Could not read asset ${assetPath} imported by ${cssFile}`
-      );
-      let {path: newPath} = await logError(askUserForPath({path: assetPath, importedBy: cssFile, contents: asset}));
-      return newPath;
-    });
+    let result = await updateCssPaths(css, updateAsset.bind(null, cssFile));
     concatenatedCss += `\n${result.css}`;
   }
   await logError(askUserForPath({path: 'components.css', contents: new Buffer(concatenatedCss)}));
-};
+}

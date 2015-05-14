@@ -1,4 +1,3 @@
-import path from 'path';
 import {directory} from '../src/strategies';
 import {readFile} from '../src/async';
 import promisify from 'es6-promisify';

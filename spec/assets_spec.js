@@ -7,10 +7,9 @@ let fixture = fixtureFile => fs.readFileSync(fixturePath(fixtureFile));
 
 describe('assets', function() {
   it('works', async function(done) {
-    let resolve, reject;
-    let promise = new Promise(function(_resolve, _reject) {
+    let resolve;
+    let promise = new Promise(function(_resolve) {
       resolve = _resolve;
-      reject = _reject;
     });
 
     let files = [];

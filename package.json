@@ -2,13 +2,7 @@
   "name": "dr-frankenstyle",
   "version": "0.0.13",
   "description": "Resolves CSS dependencies between node packages",
-  "main": "dist/dr-frankenstyle.js",
-  "files": [
-    "dist",
-    "package.json",
-    "LICENSE",
-    "README.md"
-  ],
+  "main": "dr-frankenstyle.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/pivotal-cf/dr-frankenstyle.git"
@@ -23,15 +17,27 @@
     "url": "https://github.com/pivotal-cf/dr-frankenstyle/issues"
   },
   "devDependencies": {
-    "babel": "^5.1.13",
-    "dr-frankenstyle": "./",
+    "babel": "^5.3.3",
+    "babel-eslint": "^3.1.1",
+    "del": "^1.1.1",
+    "dr-frankenstyle": "file:dist",
+    "gulp": "^3.8.11",
+    "gulp-babel": "^5.1.0",
+    "gulp-dr-frankenstyle": "file:gulp",
+    "gulp-eslint": "^0.12.0",
+    "gulp-header": "^1.2.2",
+    "gulp-jasmine": "^2.0.1",
+    "gulp-load-plugins": "^0.10.0",
+    "gulp-plumber": "^1.0.0",
     "jasmine": "^2.2.0",
-    "jasmine-es6": "0.0.2",
+    "merge-stream": "^0.1.7",
+    "require-dir": "^0.3.0",
     "rimraf": "^2.3.2",
+    "run-sequence": "^1.1.0",
     "vinyl": "^0.4.6"
   },
   "dependencies": {
-    "babel-runtime": "5.1.13",
+    "babel-runtime": "^5.3.3",
     "debuglog": "^1.0.1",
     "es6-promisify": "^1.1.1",
     "lodash.uniq": "^3.1.0",
@@ -41,7 +47,6 @@
     "through2": "^0.6.5"
   },
   "scripts": {
-    "test": "npm install && jasmine-es6",
-    "prepublish": "./node_modules/.bin/babel src --out-dir dist"
+    "test": "npm install && gulp"
   }
 }

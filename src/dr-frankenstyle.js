@@ -11,7 +11,7 @@ async function packageTree() {
   return await logError(npm.commands.ls([], true), '`npm ls` has failed, exiting.');
 }
 
-export default options => {
+export default function(options) {
   let stream = options.stream ? through2.obj() : null;
   (async function() {
     let packages;

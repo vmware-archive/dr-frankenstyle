@@ -7,9 +7,9 @@ export default function(dependencyTree, filterRegEx) {
   while (queue.length) {
     node = queue.pop();
     result.unshift(node);
-    Object.keys(node.dependencies).forEach(packageName =>
-      queue.push(node.dependencies[packageName])
-    );
+    for (let packageName of Object.keys(node.dependencies)) {
+      queue.push(node.dependencies[packageName]);
+    }
   }
   return uniq(
     result
@@ -17,4 +17,4 @@ export default function(dependencyTree, filterRegEx) {
       .filter((packageJson) => !filterRegEx || filterRegEx.test(packageJson.name)),
     (packageJson) => packageJson.name
   );
-};
+}
