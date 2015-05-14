@@ -1,3 +1,4 @@
+var path = require('path');
 var drFrankenstyle = require('dr-frankenstyle');
 var through2 = require('through2');
 var File = require('vinyl');
@@ -8,6 +9,16 @@ module.exports = function() {
       file.drFrankenstyle = true;
       callback(null, Object.setPrototypeOf(file, new File(file)));
     }));
+};
+
+module.exports.railsUrls = function() {
+  return through2.obj(function(file, encoding, callback) {
+    if (path.extname(file.path) === '.css') {
+      var newContents = file.contents.toString().replace(/url\(/g, 'asset-url(');
+      file.contents = new Buffer(newContents);
+    }
+    callback(null, file);
+  });
 };
 
 module.exports.done = function() {
