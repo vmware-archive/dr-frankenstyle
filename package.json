@@ -23,6 +23,7 @@
     "url": "https://github.com/pivotal-cf/dr-frankenstyle/issues"
   },
   "devDependencies": {
+    "babel": "^5.1.13",
     "dr-frankenstyle": "./",
     "jasmine": "^2.2.0",
     "jasmine-es6": "0.0.2",
