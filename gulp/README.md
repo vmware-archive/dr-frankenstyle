@@ -54,26 +54,6 @@ gulp.task('assets', function() {
 });
 ```
 
-## Modifying the file path
-
-To change locations of the compiled css or required assets, you can modifiy the `file.path`.
-Here is an example gulp task that changes the path to `assets`:
-
-```js
-var path = require('path');
-var gulp = require('gulp');
-var drFrankenstyle = require('gulp-dr-frankenstyle');
-var through2 = require('through2');
-
-gulp.task('assets', function() {
-  return drFrankenstyle()
-    .pipe(drFrankenstyle.done())
-    .pipe(gulp.dest('assets'));
-});
-```
-
-The above example will copy everything into the `assets` folder instead.
-
 ## Modifying the file name
 
 You may also want to modify the file name. In this case, use [rename](https://www.npmjs.com/package/gulp-rename) with 
