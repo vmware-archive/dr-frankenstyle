@@ -1,11 +1,20 @@
+import {dest} from 'vinyl-fs';
 import drFrankenstyle from './dr-frankenstyle';
 
-var argv = require('yargs')
-  .usage('Usage: dr-frankenstyle <output>')
+const argv = require('yargs')
+  .usage('Usage: dr-frankenstyle <output-dir>')
   .example('dr-frankenstyle my_assets_dir')
-  .demand(1, 'must provide an output')
+  .demand(1, 'Please provide an output directory')
+  .boolean('rails')
   .argv;
 
-var output = argv._[0];
+const output = argv._[0];
 
-drFrankenstyle({directory: output});
+let stream = drFrankenstyle();
+
+if (argv.rails) {
+  stream = stream.pipe(drFrankenstyle.railsUrls());
+}
+
+stream.pipe(drFrankenstyle.done())
+  .pipe(dest(output));
