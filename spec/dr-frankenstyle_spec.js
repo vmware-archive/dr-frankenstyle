@@ -31,7 +31,6 @@ describe('dr-frankenstyle', function() {
           callback(null, file);
           done();
         }));
-
       stream.write({path: 'components.css', contents: new Buffer(cssInput)});
     });
 
@@ -46,7 +45,6 @@ describe('dr-frankenstyle', function() {
           callback(null, file);
           done();
         }));
-
       stream.write({path: 'notCss.png', contents: new Buffer(fileInput)});
     });
   });

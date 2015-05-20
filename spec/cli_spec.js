@@ -13,7 +13,7 @@ const expectedPackages = ['tires', 'brakes', 'calipers', 'drums', 'delorean', 'm
 const originalWorkingDirectory = process.cwd();
 
 async function cli(args = '') {
-  await exec(`${command} ${args}`);
+  return await exec(`${command} ${args}`);
 }
 
 async function readCss() {

@@ -1,11 +1,12 @@
+import fs from 'fs-promise';
 import path from 'path';
 import through2 from 'through2';
-import File from 'vinyl';
 import promisify from 'es6-promisify';
 import {npm} from './async';
 import logError from './log_error';
 import listDeps from './list_dependencies';
-import assets from './assets';
+import modifyAssetPaths from './assets';
+import File from 'vinyl';
 
 async function packageTree() {
   await logError(npm.load({}), '`npm.load` has failed, exiting.');
@@ -22,36 +23,27 @@ async function resolveDependencies() {
   }
 }
 
-function namespaceAsset(file) {
-  const assetPath = path.join(path.dirname(file.importedBy), file.path);
-  const [, packageName] = assetPath.match(/^.*node_modules\/(.*?)\//);
-  file.path = path.join(packageName, path.basename(file.path));
-}
+function gatherCssFiles() {
+  const stream = through2.obj();
 
-async function streamify(stream) {
-  const cssFiles = (await resolveDependencies())
-    .filter(packageJson => 'style' in packageJson)
-    .map(packageJson => path.resolve(packageJson.path, packageJson.style));
-
-  assets(cssFiles, async (file, callback) => {
-    if (file.path !== 'components.css') {
-      namespaceAsset(file);
+  (async () => {
+    for (const packageJson of await resolveDependencies()) {
+      if (!('style' in packageJson)) { continue; }
+      const cssPath = path.resolve(packageJson.path, packageJson.style);
+      await promisify(stream.write.bind(stream))(Object.assign(
+        new File({path: cssPath, contents: await fs.readFile(cssPath)}),
+        {packageName: packageJson.name}
+      ));
     }
+    await promisify(stream.end.bind(stream))();
+  })();
 
-    const originalPath = file.path;
-    await logError(promisify(stream.write.bind(stream))(file));
-    if (originalPath === 'components.css') await promisify(stream.end.bind(stream))();
-    callback(null, file);
-  });
+  return stream;
 }
 
 export default function drFrankenstyle() {
-  const stream = through2.obj();
-  streamify(stream);
-  return stream
-    .pipe(through2.obj(function(file, encoding, callback) {
-      callback(null, new File(file));
-    }));
+  return gatherCssFiles()
+    .pipe(modifyAssetPaths());
 }
 
 drFrankenstyle.railsUrls = function() {

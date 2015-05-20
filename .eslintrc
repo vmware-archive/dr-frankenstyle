@@ -18,7 +18,7 @@
     "no-shadow": 0,
     "no-underscore-dangle": 0,
     "no-unused-expressions": 0,
-    "quotes": [1, "single"],
+    "quotes": [2, "single", "avoid-escape"],
     "strict": 0
   }
 }

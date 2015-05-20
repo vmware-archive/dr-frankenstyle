@@ -1,49 +1,87 @@
 import path from 'path';
-import fs from 'fs';
+import through2 from 'through2';
+import File from 'vinyl';
 import assets from '../src/assets';
 
-let fixturePath = fixtureFile => path.resolve(__dirname, 'fixtures', fixtureFile);
-let fixture = fixtureFile => fs.readFileSync(fixturePath(fixtureFile));
-
 describe('assets', function() {
-  it('works', async function(done) {
-    let resolve;
-    let promise = new Promise(function(_resolve) {
-      resolve = _resolve;
-    });
+  const cssFile1 = Object.assign(
+    new File({
+      path: 'spec/fixtures/assets_spec/package1/cssFile1.css',
+      contents: new Buffer([
+        '.table { background: url(   "foo.png?a=b&c=d") }',
+        'h1 { color: blue }',
+        '.clouds { background: url(\'clouds.png#1234\') }'
+      ].join('\n'))
+    }), {
+      packageName: 'package1'
+    }
+  );
+  const cssFile2 = Object.assign(
+    new File({
+      path: 'spec/fixtures/assets_spec/package2/cssFile2.css',
+      contents: new Buffer([
+        '.modal { background: url(abcd.gif) }',
+        'a { cursor: pointer }'
+      ].join('\n'))
+    }),
+    {
+      packageName: 'package2'
+    }
+  );
 
-    let files = [];
-    let count = 0;
-    assets(
-      [
-        fixturePath('style1.css'),
-        fixturePath('style2.css')
-      ],
-      (file, callback) => {
-        files.push(file);
-        file.path = file.path.replace('gif', 'png');
-        callback(null, file);
-        if (++count === 4) resolve('hello');
-      }
-    );
+  let stream;
+  let cssFile;
+  let assetFiles;
 
-    await promise;
+  beforeEach(function(done) {
+    assetFiles = [];
 
-    expect(files[0].path).toBe('image1.png');
-    expect(files[0].importedBy).toBe(fixturePath('style1.css'));
-    expect(files[0].contents.equals(fixture('image1.gif'))).toBe(true);
+    stream = through2.obj();
+    stream
+      .pipe(assets())
+      .pipe(through2.obj(
+        function(file, encoding, callback) {
+          if (path.extname(file.path) === '.css') {
+            cssFile = file;
+          } else {
+            assetFiles.push(file);
+          }
+          callback(null, file);
+        },
+        function(throughDone) {
+          throughDone();
+          done();
+        }
+      ));
 
-    expect(files[1].path).toBe('folder/image2.png');
-    expect(files[1].importedBy).toBe(fixturePath('style1.css'));
-    expect(files[1].contents.equals(fixture('folder/image2.gif'))).toBe(true);
+    stream.write(cssFile1);
+    stream.write(cssFile2);
+    stream.end();
+  });
 
-    expect(files[2].path).toBe('folder/image2.png');
-    expect(files[2].importedBy).toBe(fixturePath('style2.css'));
-    expect(files[2].contents.equals(fixture('folder/image2.gif'))).toBe(true);
+  it('generates a concatenated css file called "components.css"', function() {
+    expect(cssFile.path).toEqual('components.css');
+  });
 
-    expect(files[3].path).toBe('components.css');
-    expect(files[3].contents.toString()).toBe(fixture('expected_output.css').toString());
+  it('moves any asset file into a subdirectory, stripping any query params', function() {
+    const foo = assetFiles.map(assetFile => ({path: assetFile.path, contents: assetFile.contents.toString().trim()}));
 
-    done();
+    expect(foo.length).toEqual(3);
+    expect(foo).toContain({path: 'package1/foo.png', contents: 'foo.png contents'});
+    expect(foo).toContain({path: 'package1/clouds.png', contents: 'clouds.png contents'});
+    expect(foo).toContain({path: 'package2/abcd.gif', contents: 'abcd.gif contents'});
+  });
+
+  it('does not modify non-url css rules', function() {
+    const css = cssFile.contents.toString();
+    expect(css).toContain('h1 { color: blue }');
+    expect(css).toContain('a { cursor: pointer }');
+  });
+
+  it('modifies urls to match the new asset structure', function() {
+    const css = cssFile.contents.toString();
+    expect(css).toContain(".table { background: url('package1/foo.png?a=b&c=d') }");
+    expect(css).toContain(".clouds { background: url('package1/clouds.png#1234') }");
+    expect(css).toContain(".modal { background: url('package2/abcd.gif') }");
   });
 });
