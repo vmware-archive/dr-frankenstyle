@@ -16,5 +16,5 @@ if (argv.rails) {
   stream = stream.pipe(drFrankenstyle.railsUrls());
 }
 
-stream.pipe(drFrankenstyle.done())
+stream
   .pipe(dest(output));

@@ -50,8 +50,7 @@ export default function drFrankenstyle() {
   streamify(stream);
   return stream
     .pipe(through2.obj(function(file, encoding, callback) {
-      file.drFrankenstyle = true;
-      callback(null, Object.setPrototypeOf(file, new File(file)));
+      callback(null, new File(file));
     }));
 }
 
@@ -60,19 +59,6 @@ drFrankenstyle.railsUrls = function() {
     if (path.extname(file.path) === '.css') {
       var newContents = file.contents.toString().replace(/url\(/g, 'asset-url(');
       file.contents = new Buffer(newContents);
-    }
-    callback(null, file);
-  });
-};
-
-drFrankenstyle.done = function() {
-  return through2.obj(function(file, encoding, callback) {
-    if (file.drFrankenstyle) {
-      var clone = Object.getPrototypeOf(file);
-      Object.keys(file).forEach(function(key) {
-        clone[key] = file[key];
-      });
-      file = clone;
     }
     callback(null, file);
   });
