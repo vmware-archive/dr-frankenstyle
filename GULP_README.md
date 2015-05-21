@@ -7,69 +7,36 @@
 ## Install
 
 ```sh
-npm install gulp-dr-frankenstyle
+npm install --save-dev gulp-dr-frankenstyle
 ```
 
 ## Basic Usage
 
-Run Dr. Frankenstyle:
+Because Dr. Frankenstyle uses streams and vinyl under the hood, it's super easy to use with Gulp!
 
 ```js
+var drFrankenstyle = require('dr-frankenstyle');
 var gulp = require('gulp');
-var drFrankenstyle = require('gulp-dr-frankenstyle');
 
-gulp.task('assets', function() {
+gulp.task('css', function() {
   return drFrankenstyle()
-    .pipe(drFrankenstyle.done())
-    .pipe(gulp.dest('public'));
+    .pipe(gulp.dest('<output-dir>'));
 });
-
 ```
 
-This will create a file `public/components.css`. It will also copy any fonts or images required by the css into the public directory.
-If you serve `components.css` and the required fonts and images, you can consume it in your html.
+## Options
 
-```html
-<link rel="stylesheet" type="text/css" href="components.css"/>
-```
+### Rails URLs
 
-If you add or remove node modules that require css, rerun Dr. Frankenstyle again to update the css.
-
-## For Rails users
-
-Pipe the Dr. Frankenstyle output through the `railsUrls` helper
-to have css that uses Rails' `asset-url` helpers.
-(I.e. you want CSS that looks like `background: asset-url('foo/bar.png')`,
- not `background: url('foo/bar.png')`).
+If you have a Rails project and you're using the asset pipeline, you probably want to use Rails' `asset-url` helper.
+(I.e. your css would have rules like `background: asset-url('path/to/image.png')` instead of `background: url('path/to/image.png')`.)
+Dr. Frankenstyle has an option that will replace all `url`s with `asset-url`s
 
 ```js
-var gulp = require('gulp');
-var drFrankenstyle = require('gulp-dr-frankenstyle');
-
-gulp.task('assets', function() {
+gulp.task('css', function() {
   return drFrankenstyle()
     .pipe(drFrankenstyle.railsUrls())
-    .pipe(drFrankenstyle.done())
-    .pipe(gulp.dest('public'));
-});
-```
-
-## Modifying the file name
-
-You may also want to modify the file name. In this case, use [rename](https://www.npmjs.com/package/gulp-rename) with 
-gulp-dr-frankenstyle to output exactly the names you want:
-
-```js
-var path = require('path');
-var gulp = require('gulp');
-var drFrankenstyle = require('gulp-dr-frankenstyle');
-var rename = require("gulp-rename");
-
-gulp.task('assets', function() {
-  return drFrankenstyle()
-    .pipe(rename({prefix: 'prefix-'}))
-    .pipe(drFrankenstyle.done())
-    .pipe(gulp.dest('public'));
+    .pipe(gulp.dest('<output-dir>'));
 });
 ```
 
