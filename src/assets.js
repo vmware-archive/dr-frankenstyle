@@ -14,12 +14,12 @@ export default function() {
       debug(`Processing css: ${file.path}`);
 
       const assetFilesToAdd = [];
-      const cssWithUpdatedPaths = file.contents.toString().replace(/url\(\s*(['"]?)([^?#]*)(.*?)\1\s*\)/g, (_, quote, url, query) => {
+      const cssWithUpdatedPaths = file.contents.toString().replace(/url\(\s*(['"]?)(.*?)([#?].*?)?\1\s*\)/g, (_, quote, url, query) => {
         assetFilesToAdd.push({
           readPath: path.join(path.dirname(file.path), url),
           namespacedPath: path.join(file.packageName, path.basename(url))
         });
-        return `url('${file.packageName}/${path.basename(url)}${query}')`;
+        return `url('${file.packageName}/${path.basename(url)}${query || ''}')`;
       });
 
       concatenatedCss += cssWithUpdatedPaths + '\n';
