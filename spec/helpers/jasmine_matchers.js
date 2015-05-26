@@ -31,3 +31,25 @@ export function toBeAFile() {
     }
   };
 }
+
+export function toHavePackages(util, equalityTesters) {
+  return {
+    compare: function(actualPackages, expectedPackageNames) {
+      const result = {};
+      const actualPackageNames = actualPackages
+        .map(packageJson => packageJson.name);
+      result.pass = util.equals(
+        actualPackageNames.sort(),
+        expectedPackageNames.sort(),
+        equalityTesters
+      );
+      if (!result.pass) {
+        const actual = `[${actualPackageNames.join(', ')}]`;
+        const expected = `[${expectedPackageNames.join(', ')}]`;
+        result.message = `Expected ${actual} to equal ${expected}`;
+      }
+      return result;
+    }
+  };
+}
+

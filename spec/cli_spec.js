@@ -77,7 +77,9 @@ describe('dr-frankenstyle', function() {
 
   describe('normal use case', async function() {
     beforeEach(async function() {
-      await cli('public/');
+      const {stdout, stderr} = await cli('public/');
+      if (stdout.toString().trim().length) console.log(stdout.toString());
+      if (stderr.toString().trim().length) console.log(stderr.toString());
     });
 
     itProducesTheExpectedOutput();
