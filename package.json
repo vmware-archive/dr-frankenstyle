@@ -1,6 +1,6 @@
 {
   "name": "dr-frankenstyle",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Resolves CSS dependencies between node packages",
   "main": "dr-frankenstyle.js",
   "preferGlobal": "true",
