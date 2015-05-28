@@ -21,7 +21,13 @@ export default class DependencyGraph {
   async installedPackagesLookup() {
     const packageJsonPaths = await glob(
       '**/node_modules/*/package.json',
-      {cwd: this.rootPackageDir}
+      {
+        cwd: this.rootPackageDir,
+
+        // To enable dr-frankenstyle to detect npm linked packages
+        // Note: we couldn't figure out how to test this
+        follow: true
+      }
     );
     const packageJsons = await* packageJsonPaths
       .map(relativePath => this.readJson(relativePath));
