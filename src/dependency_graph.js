@@ -12,10 +12,14 @@ export default class DependencyGraph {
   }
 
   async readJson(...paths) {
-    const packageJsonPath = path.resolve(this.rootPackageDir, ...paths);
-    const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
-    packageJson.path = path.dirname(packageJsonPath);
-    return packageJson;
+    try {
+      const packageJsonPath = path.resolve(this.rootPackageDir, ...paths);
+      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
+      packageJson.path = path.dirname(packageJsonPath);
+      return packageJson;
+    } catch (e) {
+      return null;
+    }
   }
 
   async installedPackagesLookup() {
@@ -32,10 +36,12 @@ export default class DependencyGraph {
     const packageJsons = await* packageJsonPaths
       .map(relativePath => this.readJson(relativePath));
 
-    return packageJsons.reduce((lookupTable, pkg) => {
-      lookupTable[pkg.name] = pkg;
-      return lookupTable;
-    }, {});
+    return packageJsons
+      .filter(Boolean)
+      .reduce((lookupTable, pkg) => {
+        lookupTable[pkg.name] = pkg;
+        return lookupTable;
+      }, {});
   }
 
   async dependencies() {

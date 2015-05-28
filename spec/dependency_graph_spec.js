@@ -56,6 +56,11 @@ describe('DependencyGraph', function() {
     );
   });
 
+  it('ignores any package.json files that are not valid JSON', async function() {
+    const graph = new DependencyGraph(path.resolve('spec/fixtures/project-with-invalid-json'));
+    expect(await graph.dependencies()).toHavePackages(['valid-package']);
+  });
+
   it('reads the package.json of every installed dependency', async function() {
     const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
     expect(await graph.dependencies()).toHavePackages(
