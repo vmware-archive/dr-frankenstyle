@@ -32,7 +32,7 @@ describe('dr-frankenstyle', function() {
   describe('when called with no arguments', function() {
     it('shows an error message', function(done) {
       cli()
-        .then(() => { throw new Error("Expected an error, but got none") })
+        .then(() => { throw new Error('Expected an error, but got none'); })
         .catch(output => {
           expect(output.stderr).toContain('Please provide an output directory');
           done();
