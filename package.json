@@ -37,6 +37,7 @@
     "jasmine-es6": "0.0.2",
     "merge-stream": "^0.1.7",
     "npm": "^2.10.1",
+    "proxyquire": "^1.5.0",
     "require-dir": "^0.3.0",
     "rimraf": "^2.3.2",
     "run-sequence": "^1.1.0"
