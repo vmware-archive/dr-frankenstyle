@@ -1,35 +1,29 @@
 import fs from 'fs-promise';
 import path from 'path';
 import through2 from 'through2';
-import promisify from 'es6-promisify';
-import DependencyGraph from './dependency_graph';
 import modifyAssetPaths from './assets';
 import File from 'vinyl';
+import cssDependencies from './css-dependencies';
 
-function gatherCssFiles() {
-  const stream = through2.obj();
-
-  (async () => {
-    try {
-      const dependencies = await new DependencyGraph().orderedStyleDependencies();
-      for (const packageJson of dependencies) {
-        const cssPath = path.resolve(packageJson.path, packageJson.style);
-        await promisify(stream.write.bind(stream))(Object.assign(
-          new File({path: cssPath, contents: await fs.readFile(cssPath)}),
-          {packageName: packageJson.name}
-        ));
-      }
-      await promisify(stream.end.bind(stream))();
-    } catch (e) {
-      console.log(e.stack);
-    }
-  })();
-
-  return stream;
+function cssFilesFromPackages() {
+  return through2.obj(function(cssInfo, encoding, callback) {
+    fs.readFile(cssInfo.path)
+      .then(function(cssContents) {
+        const file = Object.assign(
+          new File({path: cssInfo.path, contents: cssContents}),
+          {packageName: cssInfo.packageName}
+        );
+        callback(null, file);
+      }).catch(function (error) {
+        console.error(error.stack);
+        callback(error, null);
+      });
+  });
 }
 
 export default function drFrankenstyle() {
-  return gatherCssFiles()
+  return cssDependencies()
+    .pipe(cssFilesFromPackages())
     .pipe(modifyAssetPaths());
 }
 
