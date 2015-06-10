@@ -107,6 +107,19 @@ gulp.task('css', function() {
 });
 ```
 
+### Using the API with Grunt
+
+Dr. Frankenstyle is easy to use with Grunt as well. Just register a new task:
+
+```js
+grunt.registerTask('styles', function() {
+  var drFrankenstyle = require('dr-frankenstyle');
+  var fs = require('vinyl-fs');
+  drFrankenstyle().pipe(fs.dest('<output-dir>')).on('end', this.async());
+});
+
+```
+
 ## Options
 
 ### Rails URLs
