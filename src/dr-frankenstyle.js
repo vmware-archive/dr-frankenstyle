@@ -1,34 +1,24 @@
-import fs from 'fs-promise';
+import {merge} from 'event-stream';
 import path from 'path';
-import through2 from 'through2';
-import modifyAssetPaths from './assets';
-import File from 'vinyl';
+import through from 'through2';
+import assetRenameTable from './asset-rename-table';
+import copyAssets from './copy-assets';
 import cssDependencies from './css-dependencies';
-
-function cssFilesFromPackages() {
-  return through2.obj(function(cssInfo, encoding, callback) {
-    fs.readFile(cssInfo.path)
-      .then(function(cssContents) {
-        const file = Object.assign(
-          new File({path: cssInfo.path, contents: cssContents}),
-          {packageName: cssInfo.packageName}
-        );
-        callback(null, file);
-      }).catch(function (error) {
-        console.error(error.stack);
-        callback(error, null);
-      });
-  });
-}
+import cssFilesFromDependencies from './css-files-from-dependencies';
+import updateAssetUrlsAndConcat from './update-asset-urls-and-concat';
 
 export default function drFrankenstyle() {
-  return cssDependencies()
-    .pipe(cssFilesFromPackages())
-    .pipe(modifyAssetPaths());
+  const cssFilesStream = cssDependencies().pipe(cssFilesFromDependencies());
+  const renameTableStream = cssFilesStream.pipe(assetRenameTable());
+
+  return merge(
+    renameTableStream.pipe(copyAssets()),
+    merge(cssFilesStream, renameTableStream).pipe(updateAssetUrlsAndConcat())
+  );
 }
 
 drFrankenstyle.railsUrls = function() {
-  return through2.obj(function(file, encoding, callback) {
+  return through.obj(function(file, encoding, callback) {
     if (path.extname(file.path) === '.css') {
       var newContents = file.contents.toString().replace(/url\(/g, 'asset-url(');
       file.contents = new Buffer(newContents);
