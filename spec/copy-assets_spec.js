@@ -1,4 +1,5 @@
 import {readArray, writeArray} from 'event-stream';
+import File from 'vinyl';
 
 const mockContentsLookup = {
   'node_modules/package-a/path/to/asset-a1.jpg': new Buffer('contents for asset-a1'),
@@ -42,12 +43,26 @@ describe('copyAssets', () => {
       }
     };
 
-    readArray([renameTable])
-      .pipe(copyAssets())
-      .pipe(writeArray((error, data) => {
-        assetFiles = data;
-        done();
-      }));
+    const cssDependencies = [
+      {data: 'goes here'}
+    ];
+
+    const renameTableFile = new File({
+      path: 'asset-rename-table.json',
+      contents: new Buffer(JSON.stringify(renameTable, null, 2))
+    });
+
+    const cssDependenciesFile = new File({
+      path: 'dependencies-list.json',
+      contents: new Buffer(JSON.stringify(cssDependencies, null, 2))
+    });
+
+    readArray([renameTableFile, cssDependenciesFile])
+    .pipe(copyAssets())
+    .pipe(writeArray((error, data) => {
+      assetFiles = data;
+      done();
+    }));
   });
 
   it('returns a stream of all asset files in the rename table with new namespaced paths', () => {

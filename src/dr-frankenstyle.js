@@ -1,19 +1,18 @@
 import {merge} from 'event-stream';
 import path from 'path';
 import through from 'through2';
-import assetRenameTable from './asset-rename-table';
-import copyAssets from './copy-assets';
-import cssDependencies from './css-dependencies';
 import cssFilesFromDependencies from './css-files-from-dependencies';
-import updateAssetUrlsAndConcat from './update-asset-urls-and-concat';
+
+import setup from './setup';
+import copyAssets from './copy-assets';
+import generateCss from './generate-css';
 
 export default function drFrankenstyle() {
-  const cssFilesStream = cssDependencies().pipe(cssFilesFromDependencies());
-  const renameTableStream = cssFilesStream.pipe(assetRenameTable());
+  const setupStream = setup({cached: false});
 
   return merge(
-    renameTableStream.pipe(copyAssets()),
-    merge(cssFilesStream, renameTableStream).pipe(updateAssetUrlsAndConcat())
+    setupStream.pipe(copyAssets()),
+    setupStream.pipe(generateCss(cssFilesFromDependencies()))
   );
 }
 
