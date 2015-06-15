@@ -1,5 +1,4 @@
 import path from 'path';
-import proxyquire from 'proxyquire';
 import through from 'through2';
 
 class MockDependencyGraph {
@@ -13,6 +12,7 @@ class MockDependencyGraph {
   }
 }
 
+var proxyquire = require('proxyquire').noPreserveCache();
 var cssDependencies = proxyquire('../src/css-dependencies', {
   './dependency_graph': MockDependencyGraph
 });
