@@ -1,8 +1,14 @@
 import path from 'path';
 import fs from 'fs-promise';
 import {exec} from 'child-process-promise';
+import {merge} from 'event-stream';
+import {dest} from 'vinyl-fs';
 import {generateProject, cleanupProject} from './helpers/dummy_project';
 import {toHaveOrder, toBeAFile} from './helpers/jasmine_matchers';
+import setup from '../src/setup';
+import copyAssets from '../src/copy-assets';
+import generateCss from '../src/generate-css';
+import cssFilesFromDependencies from '../src/css-files-from-dependencies';
 
 const command = `babel-node ${path.join(__dirname, '..', 'src', 'cli.js')}`;
 const expectedPackages = ['tires', 'brakes', 'calipers', 'drums', 'delorean', 'mr-fusion', 'focus', 'f150', 'truck-tires', 'cowboy-hat', 'truck-bed', 'gate', 'timeTravel', '88-mph'];
@@ -103,6 +109,30 @@ describe('dr-frankenstyle', function() {
         }
         done();
       });
+    });
+  });
+
+  describe('using the low-level api', () => {
+    beforeEach(done => {
+      var setupStream = setup({cached: false});
+      merge(
+        setupStream.pipe(copyAssets()),
+        setupStream.pipe(generateCss(cssFilesFromDependencies()))
+      ).pipe(dest('public/')).on('end', done);
+    });
+
+    itProducesTheExpectedOutput();
+
+    describe('using the cache', () => {
+      beforeEach(done => {
+        var setupStream = setup({cached: true});
+        merge(
+          setupStream.pipe(copyAssets()),
+          setupStream.pipe(generateCss(cssFilesFromDependencies()))
+        ).pipe(dest('public/')).on('end', done);
+      });
+
+      itProducesTheExpectedOutput();
     });
   });
 
