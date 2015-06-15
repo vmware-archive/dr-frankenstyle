@@ -1,5 +1,4 @@
 import {readArray, writeArray} from 'event-stream';
-import proxyquire from 'proxyquire';
 
 const mockContentsLookup = {
   'node_modules/package-a/path/to/asset-a1.jpg': new Buffer('contents for asset-a1'),
@@ -15,6 +14,7 @@ const mockFs = {
   })
 };
 
+var proxyquire = require('proxyquire').noPreserveCache();
 var copyAssets = proxyquire('../src/copy-assets', {'fs-promise': mockFs});
 
 describe('copyAssets', () => {

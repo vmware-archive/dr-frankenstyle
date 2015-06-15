@@ -132,7 +132,7 @@ describe('DependencyGraph', function() {
     expect(orderedStyleDependencyNames).toContain('pui-css-whitespace');
   });
 
-  it('adds a path property to each packageJson so that the style path can be resolved', async function() {
+  it('adds a path property to each packageJson so that the style path can be resolved', async function(done) {
     const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
     const orderedStyleDependencies = (await graph.orderedStyleDependencies());
 
@@ -141,5 +141,7 @@ describe('DependencyGraph', function() {
         style: 'alerts.css',
         path: path.resolve('spec/fixtures/pivotal-ui/node_modules/pui-css-alerts')
       }));
+
+    done();
   });
 });
