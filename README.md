@@ -149,6 +149,11 @@ Dr. Frankenstyle.
 1. Add a style attribute to your package.json that points to your CSS file.
 1. Publish it to npm.
 
+### Using the developer API
+
+If you are developing complicated components, or a component library, you may
+want to use our [developer api](https://github.com/pivotal-cf/dr-frankenstyle/blob/master/DEVELOPER_API_README.md)
+
 ***
  
 (c) Copyright 2015 Pivotal Software, Inc. All Rights Reserved.
