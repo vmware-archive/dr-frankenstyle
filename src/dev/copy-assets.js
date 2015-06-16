@@ -1,5 +1,5 @@
 import File from 'vinyl';
-import logError from './log_error';
+import logError from '../log_error';
 import fs from 'fs-promise';
 import path from 'path';
 import through from 'through2';

@@ -1,6 +1,6 @@
-import cssDependencies from './css-dependencies';
-import cssFilesFromDependencies from './css-files-from-dependencies';
-import assetRenameTable from './asset-rename-table';
+import cssDependencies from '../css-dependencies';
+import cssFilesFromDependencies from '../css-files-from-dependencies';
+import assetRenameTable from '../asset-rename-table';
 import {pipeline, map, merge} from 'event-stream';
 import reduce from 'stream-reduce';
 import File from 'vinyl';

@@ -5,9 +5,7 @@ import {merge} from 'event-stream';
 import {dest} from 'vinyl-fs';
 import {generateProject, cleanupProject} from './helpers/dummy_project';
 import {toHaveOrder, toBeAFile} from './helpers/jasmine_matchers';
-import setup from '../src/setup';
-import copyAssets from '../src/copy-assets';
-import generateCss from '../src/generate-css';
+import {setup, copyAssets, generateCss} from '../src/dev';
 import cssFilesFromDependencies from '../src/css-files-from-dependencies';
 
 const command = `babel-node ${path.join(__dirname, '..', 'src', 'cli.js')}`;

@@ -16,7 +16,7 @@ const mockFs = {
 };
 
 var proxyquire = require('proxyquire').noPreserveCache();
-var copyAssets = proxyquire('../src/copy-assets', {'fs-promise': mockFs});
+var copyAssets = proxyquire('../../src/dev/copy-assets', {'fs-promise': mockFs});
 
 describe('copyAssets', () => {
   let assetFiles;

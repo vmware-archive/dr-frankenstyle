@@ -1,6 +1,6 @@
 import {readArray, writeArray, map} from 'event-stream';
 import File from 'vinyl';
-import generateCss from '../src/generate-css';
+import generateCss from '../../src/dev/generate-css';
 
 describe('generateCss', () => {
   let result;

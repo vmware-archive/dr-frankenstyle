@@ -3,9 +3,7 @@ import path from 'path';
 import through from 'through2';
 import cssFilesFromDependencies from './css-files-from-dependencies';
 
-import setup from './setup';
-import copyAssets from './copy-assets';
-import generateCss from './generate-css';
+import {setup, copyAssets, generateCss} from './dev';
 
 export default function drFrankenstyle() {
   const setupStream = setup({cached: false});

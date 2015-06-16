@@ -18,11 +18,11 @@ This step only needs to be run once, or when you change your dependecies or add
 assets.
 
 ```js
-var setupDrF = require('dr-frankenstyle/setup');
-var copyAssets = require('dr-frankenstyle/copy-assets');
+var setup = require('dr-frankenstyle/dev').setup;
+var copyAssets = require('dr-frankenstyle/dev').copyAssets;
 var gulp = require('gulp');
 
-setupDrF({cached: false})
+setup({cached: false})
   .pipe(copyAssets())
   .pipe(gulp.dest('<output-dir>'));
 ```
@@ -37,11 +37,11 @@ for each package.
 Here's the general structure of step 2...
 
 ```js
-var setupDrF = require('dr-frankenstyle/setup');
-var generateCss = require('dr-frankenstyle/generate-css');
+var setup = require('dr-frankenstyle/dev').setup;
+var generateCss = require('dr-frankenstyle/dev').generateCss;
 var gulp = require('gulp');
 
-setupDrF({cached: true})
+setup({cached: true})
   .pipe(generateCss(developmentCssStream))
   .pipe(gulp.dest('<output-dir>'))
 ```

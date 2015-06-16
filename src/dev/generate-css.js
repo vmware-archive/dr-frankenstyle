@@ -1,7 +1,7 @@
 import {merge, map, duplex} from 'event-stream';
 import through from 'through2';
 import reduce from 'stream-reduce';
-import updateAssetUrlsAndConcat from './update-asset-urls-and-concat';
+import updateAssetUrlsAndConcat from '../update-asset-urls-and-concat';
 import path from 'path';
 
 export default function generateCss(cssFileStream) {
