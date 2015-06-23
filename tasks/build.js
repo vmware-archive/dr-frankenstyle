@@ -27,8 +27,8 @@ gulp.task('build', ['clean'], function() {
   ).pipe(gulp.dest('dist'));
 });
 
-gulp.task('buildGulp', ['build'], function() {
-  highland(gulp.src(['dist/LICENSE', 'GULP_README.md', 'package.json', 'dist/!(cli).js']))
+gulp.task('build-gulp', ['build'], function() {
+  highland(gulp.src(['dist/LICENSE', 'GULP_README.md', 'package.json', 'dist/**/!(cli).js']))
     .map(function(file) {
       if (path.basename(file.path) === 'package.json') {
         let newPackageInfo = JSON.parse(file.contents.toString());
