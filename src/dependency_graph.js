@@ -68,7 +68,7 @@ export default class DependencyGraph {
   }
 
   async styleDependencyLookup() {
-    const styleDependencies = await this.styleDependencies();
+    const styleDependencies = (await this.styleDependencies()).filter(Boolean);
     const styleDependencyNames = styleDependencies.map(pkg => pkg.name);
 
     return styleDependencies.reduce((lookupTable, pkg) => {
