@@ -1,3 +1,4 @@
+import es from 'event-stream';
 import fs from 'fs-promise';
 import path from 'path';
 import promisify from 'es6-promisify';
@@ -11,37 +12,64 @@ export default class DependencyGraph {
     this.rootPackageDir = rootPackageDir;
   }
 
-  async readJson(...paths) {
-    try {
-      const packageJsonPath = path.resolve(this.rootPackageDir, ...paths);
-      const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
-      packageJson.path = path.dirname(packageJsonPath);
-      return packageJson;
-    } catch (e) {
-      return null;
-    }
+  readJson(...paths) {
+    return new Promise(async (resolve) => {
+      try {
+        const packageJsonPath = path.resolve(this.rootPackageDir, ...paths);
+        const packageJson = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
+        packageJson.path = path.dirname(packageJsonPath);
+        resolve(packageJson);
+      } catch(e) {
+        resolve(null);
+      }
+    });
   }
 
-  async installedPackagesLookup() {
-    const packageJsonPaths = await glob(
-      '**/node_modules/*/package.json',
-      {
-        cwd: this.rootPackageDir,
+  installedPackagesLookup() {
+    return new Promise(async (resolve, reject) => {
+      const packageJsonPaths = await glob(
+        '**/node_modules/*/package.json',
+        {
+          cwd: this.rootPackageDir,
 
-        // To enable dr-frankenstyle to detect npm linked packages
-        // Note: we couldn't figure out how to test this
-        follow: true
-      }
-    );
-    const packageJsons = await* packageJsonPaths
-      .map(relativePath => this.readJson(relativePath));
+          // To enable dr-frankenstyle to detect npm linked packages
+          // Note: we couldn't figure out how to test this
+          follow: true
+        }
+      );
 
-    return packageJsons
-      .filter(Boolean)
-      .reduce((lookupTable, pkg) => {
-        lookupTable[pkg.name] = pkg;
-        return lookupTable;
-      }, {});
+      var readJson = this.readJson.bind(this);
+
+      var doneFiles = 0;
+      const BatchSize = 50;
+      es.readable(async function(count, callback) {
+          if (count >= packageJsonPaths.length) {
+            if(doneFiles === packageJsonPaths.length) {
+              return this.emit('end');
+            }
+            return callback();
+          }
+
+          if(count < doneFiles + BatchSize) {
+            callback();
+          }
+          var data = await readJson(packageJsonPaths[count]);
+          this.emit('data', data);
+          doneFiles++;
+          // If you do not wait for the file to read before calling the callback,
+          // you may hit the open file limit on certain machines, like concourse.
+          callback();
+        })
+        .pipe(es.writeArray(function(err, packageJsons) {
+          if(err) reject(err);
+          resolve(packageJsons
+            .filter(Boolean)
+            .reduce((lookupTable, pkg) => {
+              lookupTable[pkg.name] = pkg;
+              return lookupTable;
+            }, {}));
+          }));
+    });
   }
 
   async dependencies() {
