@@ -8,7 +8,7 @@ import {toHaveOrder, toBeAFile} from './helpers/jasmine_matchers';
 import {setup, copyAssets, generateCss} from '../src/dev';
 import cssFilesFromDependencies from '../src/css-files-from-dependencies';
 
-const command = `babel-node ${path.join(__dirname, '..', 'src', 'cli.js')}`;
+const command = `${require.resolve('babel/bin/babel-node')} ${path.join(__dirname, '..', 'src', 'cli.js')}`;
 const expectedPackages = ['tires', 'brakes', 'calipers', 'drums', 'delorean', 'mr-fusion', 'focus', 'f150', 'truck-tires', 'cowboy-hat', 'truck-bed', 'gate', 'timeTravel', '88-mph'];
 const originalWorkingDirectory = process.cwd();
 
