@@ -80,8 +80,10 @@ export default class DependencyGraph {
     const packagesToCheck = [rootPackageJson];
     while (packagesToCheck.length) {
       const pkg = packagesToCheck.shift();
+      if(!pkg) continue;
       for (const dependencyName of Object.keys(Object(pkg.dependencies))) {
         const dependency = installedPackagesLookup[dependencyName];
+        if(!dependency) console.error(`ERROR: missing dependency "${dependencyName}"`);
         if (result.has(dependency)) { continue; }
         result.add(dependency);
         packagesToCheck.push(dependency);
@@ -92,6 +94,7 @@ export default class DependencyGraph {
 
   async styleDependencies() {
     return (await this.dependencies())
+      .filter(Boolean)
       .filter(packageJson => 'style' in packageJson);
   }
 
