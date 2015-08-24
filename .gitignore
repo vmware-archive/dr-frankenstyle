@@ -2,3 +2,5 @@
 /dist
 /distGulp
 /.idea
+tmp
+public

@@ -50,37 +50,37 @@ describe('DependencyGraph', function() {
   });
 
   it('reads the package.json of every installed package in the node_modules directory', async function() {
-    const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
+    const graph = new DependencyGraph(null, path.resolve('spec/fixtures/pivotal-ui'));
     expect(Object.values(await graph.installedPackagesLookup())).toHavePackages(
       puiCssPackages.concat('non-dependency-package', 'nested-non-dependency-package', 'no-style-dependency')
     );
   });
 
   it('ignores any package.json files that are not valid JSON', async function() {
-    const graph = new DependencyGraph(path.resolve('spec/fixtures/project-with-invalid-json'));
+    const graph = new DependencyGraph(null, path.resolve('spec/fixtures/project-with-invalid-json'));
     expect(await graph.dependencies()).toHavePackages(['valid-package']);
   });
 
   it('reads the package.json of every installed dependency', async function() {
-    const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
+    const graph = new DependencyGraph(null, path.resolve('spec/fixtures/pivotal-ui'));
     expect(await graph.dependencies()).toHavePackages(
       puiCssPackages.concat('no-style-dependency')
     );
   });
 
   it('excludes packages that do not have a style attribute in the package.json', async function() {
-    const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
+    const graph = new DependencyGraph(null, path.resolve('spec/fixtures/pivotal-ui'));
     expect(await graph.styleDependencies())
       .toHavePackages(puiCssPackages);
   });
 
   it('reads the package.json of every installed dependency', async function() {
-    const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
+    const graph = new DependencyGraph(null, path.resolve('spec/fixtures/pivotal-ui'));
     expect(await graph.styleDependencyLookup()).toEqual(puiCssDependencies);
   });
 
   it('computes an ordered list of style dependencies', async function() {
-    const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
+    const graph = new DependencyGraph(null, path.resolve('spec/fixtures/pivotal-ui'));
     const orderedStyleDependencyNames = (await graph.orderedStyleDependencies())
       .map(packageJson => packageJson.name);
 
@@ -133,7 +133,7 @@ describe('DependencyGraph', function() {
   });
 
   it('adds a path property to each packageJson so that the style path can be resolved', async function(done) {
-    const graph = new DependencyGraph(path.resolve('spec/fixtures/pivotal-ui'));
+    const graph = new DependencyGraph(null, path.resolve('spec/fixtures/pivotal-ui'));
     const orderedStyleDependencies = (await graph.orderedStyleDependencies());
 
     expect(orderedStyleDependencies.find(packageJson => packageJson.name === 'pui-css-alerts'))

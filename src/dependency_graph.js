@@ -8,7 +8,8 @@ import DAG from 'dag-map';
 const glob = promisify(globWithCallback);
 
 export default class DependencyGraph {
-  constructor(rootPackageDir = process.cwd()) {
+  constructor(whitelist, rootPackageDir = process.cwd()) {
+    this.whitelist = whitelist;
     this.rootPackageDir = rootPackageDir;
   }
 
@@ -43,32 +44,32 @@ export default class DependencyGraph {
       var doneFiles = 0;
       const BatchSize = 50;
       es.readable(async function(count, callback) {
-          if (count >= packageJsonPaths.length) {
-            if(doneFiles === packageJsonPaths.length) {
-              return this.emit('end');
-            }
-            return callback();
+        if (count >= packageJsonPaths.length) {
+          if (doneFiles === packageJsonPaths.length) {
+            return this.emit('end');
           }
+          return callback();
+        }
 
-          if(count < doneFiles + BatchSize) {
-            callback();
-          }
-          var data = await readJson(packageJsonPaths[count]);
-          this.emit('data', data);
-          doneFiles++;
-          // If you do not wait for the file to read before calling the callback,
-          // you may hit the open file limit on certain machines, like concourse.
+        if (count < doneFiles + BatchSize) {
           callback();
-        })
+        }
+        var data = await readJson(packageJsonPaths[count]);
+        this.emit('data', data);
+        doneFiles++;
+        // If you do not wait for the file to read before calling the callback,
+        // you may hit the open file limit on certain machines, like concourse.
+        callback();
+      })
         .pipe(es.writeArray(function(err, packageJsons) {
-          if(err) reject(err);
+          if (err) reject(err);
           resolve(packageJsons
             .filter(Boolean)
             .reduce((lookupTable, pkg) => {
               lookupTable[pkg.name] = pkg;
               return lookupTable;
             }, {}));
-          }));
+        }));
     });
   }
 
@@ -76,11 +77,19 @@ export default class DependencyGraph {
     const rootPackageJson = await this.readJson('package.json');
     const installedPackagesLookup = await this.installedPackagesLookup();
 
+    if (this.whitelist !== null) {
+      for (let pkg in rootPackageJson.dependencies) {
+        if (!(this.whitelist.includes(pkg))) {
+          delete rootPackageJson.dependencies[pkg];
+        }
+      }
+    }
+
     const result = new Set();
     const packagesToCheck = [rootPackageJson];
     while (packagesToCheck.length) {
       const pkg = packagesToCheck.shift();
-      if(!pkg) continue;
+      if (!pkg) continue;
       for (const dependencyName of Object.keys(Object(pkg.dependencies))) {
         const dependency = installedPackagesLookup[dependencyName];
         if(!dependency) console.error(`ERROR: missing dependency "${dependencyName}"`);

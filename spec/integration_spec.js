@@ -20,23 +20,27 @@ function readCss() {
   return fs.readFile(path.resolve('public', 'components.css'), 'utf8');
 }
 
+const dummyProjectName = 'myApp';
+
 describe('dr-frankenstyle', function() {
   beforeEach(function() {
     jasmine.addMatchers({toHaveOrder, toBeAFile});
 
-    generateProject(__dirname, 'myApp');
-    process.chdir(path.resolve(__dirname, 'myApp'));
+    generateProject(__dirname, dummyProjectName);
+    process.chdir(path.resolve(__dirname, dummyProjectName));
   });
 
   afterEach(function() {
-    cleanupProject(__dirname, 'myApp');
+    cleanupProject(__dirname, dummyProjectName);
     process.chdir(originalWorkingDirectory);
   });
 
   describe('when called with no arguments', function() {
     it('shows an error message', function(done) {
       cli()
-        .then(() => { throw new Error('Expected an error, but got none'); })
+        .then(() => {
+          throw new Error('Expected an error, but got none');
+        })
         .catch(output => {
           expect(output.stderr).toContain('Please provide an output directory');
           done();
@@ -105,6 +109,42 @@ describe('dr-frankenstyle', function() {
         for (const expectedPackage of expectedPackages) {
           expect(rules).toContain(`.${expectedPackage} {background: url('${expectedPackage}/${expectedPackage}.png')}`);
         }
+        done();
+      });
+    });
+  });
+
+  describe('when a whitelist is configured', function() {
+    beforeEach(function(done) {
+      fs.writeFile(
+        path.join(__dirname, dummyProjectName, '.drfrankenstylerc'),
+        JSON.stringify({whitelist: ['timeTravel', 'delorean', 'focus']})
+      ).then(() => {
+          cli('public/')
+            .then(function({stdout, stderr}) {
+              if (stdout) console.log(stdout);
+              if (stderr) console.error(stderr);
+              done();
+            })
+            .catch(function(err) {
+              throw err;
+            });
+        });
+    });
+
+    it('omits the packages that are not in the whitelist', function(done) {
+      readCss().then(css => {
+        expect(css).toHaveOrder('drums', 'brakes');
+        expect(css).toHaveOrder('calipers', 'brakes');
+        expect(css).toHaveOrder('mr-fusion', 'delorean');
+        expect(css).toHaveOrder('brakes', 'delorean');
+        expect(css).toHaveOrder('brakes', 'focus');
+        expect(css).toHaveOrder('88-mph', 'timeTravel');
+        expect(css).toHaveOrder('delorean', 'timeTravel');
+        expect(css.includes('f150')).toEqual(false);
+        expect(css.includes('gate')).toEqual(false);
+        expect(css.includes('truck-bed')).toEqual(false);
+        expect(css.includes('cowboy-hat')).toEqual(false);
         done();
       });
     });

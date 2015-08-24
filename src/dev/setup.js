@@ -5,6 +5,7 @@ import {pipeline, map, merge} from 'event-stream';
 import reduce from 'stream-reduce';
 import File from 'vinyl';
 import {src, dest} from 'vinyl-fs';
+import fs from 'fs';
 
 
 export default function setupDevelopmentCache({cached=false}) {
@@ -12,7 +13,16 @@ export default function setupDevelopmentCache({cached=false}) {
     return src('tmp/*');
   }
 
-  const cssDependenciesStream = cssDependencies();
+  try {
+    var {whitelist} = JSON.parse(fs.readFileSync('.drfrankenstylerc'));
+  } catch(e) {
+    whitelist = null;
+    if (e.code !== 'ENOENT') {
+      throw e;
+    }
+  }
+
+  const cssDependenciesStream = cssDependencies(whitelist);
 
   const fileFromDependencyList = pipeline(
     reduce((memo, dependency) => {
