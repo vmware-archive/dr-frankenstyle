@@ -140,6 +140,18 @@ drFrankenstyle()
   .pipe(fs.dest('<output-dir>'));
 ```
 
+### Whitelist
+
+If you want Dr. F to only look at specific top level dependencies, you can create a FrankenFile (.drfrankstylerc).
+
+For example, if you only want to include `pui-css-typography` in your CSS output, you could create this file.
+
+```json
+{
+  "whitelist": ["pui-css-typography"]
+}
+```
+
 ## Building your own CSS Components
 
 You are probably ready at this point to give your own CSS a go! There are a few important steps to get it working with 
