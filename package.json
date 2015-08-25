@@ -2,12 +2,11 @@
   "name": "dr-frankenstyle",
   "version": "0.2.4",
   "description": "Resolves CSS dependencies between node packages",
-  "main": "dr-frankenstyle.js",
   "preferGlobal": "true",
   "bin": {
-    "dr-frankenstyle": "cli.js"
+    "dr-frankenstyle": "./dist/cli.js"
   },
-  "main": "dist/dr-frankenstyle.js",
+  "main": "./dist/dr-frankenstyle.js",
   "directories": {
     "lib": "dist/"
   },
