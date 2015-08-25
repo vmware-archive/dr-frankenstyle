@@ -7,17 +7,6 @@
   "bin": {
     "dr-frankenstyle": "cli.js"
   },
-  "main": "dist/dr-frankenstyle.js",
-  "directories": {
-    "lib": "dist/"
-  },
-  "files": [
-    "LICENSE",
-    "README.md",
-    "CHANGELOG.md",
-    "lib",
-    "dist"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/pivotal-cf/dr-frankenstyle.git"
@@ -70,7 +59,6 @@
     "yargs": "^3.9.0"
   },
   "scripts": {
-    "test": "gulp",
-    "build": "babel src --out-dir dist"
+    "test": "gulp"
   }
 }
