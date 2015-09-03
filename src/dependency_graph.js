@@ -79,7 +79,7 @@ export default class DependencyGraph {
 
     if (this.whitelist !== null) {
       for (let pkg in rootPackageJson.dependencies) {
-        if (!(this.whitelist.includes(pkg))) {
+        if (this.whitelist.indexOf(pkg) !== -1) {
           delete rootPackageJson.dependencies[pkg];
         }
       }
