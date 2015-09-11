@@ -142,7 +142,7 @@ drFrankenstyle()
 
 ### Whitelist
 
-If you want Dr. F to only look at specific top level dependencies, you can create a FrankenFile (.drfrankstylerc).
+If you want Dr. F to only look at specific top level dependencies, you can create a FrankenFile (.drfrankenstylerc).
 
 For example, if you only want to include `pui-css-typography` in your CSS output, you could create this file.
 
