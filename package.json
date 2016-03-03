@@ -5,7 +5,7 @@
   "main": "dr-frankenstyle.js",
   "preferGlobal": "true",
   "bin": {
-    "dr-frankenstyle": "cli.js"
+    "dr-frankenstyle": "src/cli.js"
   },
   "repository": {
     "type": "git",
